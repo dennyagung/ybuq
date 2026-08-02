@@ -1,16 +1,36 @@
 :root { --ink: #151516; --paper: #f7f6f2; --acid: #d7ff45; --line: rgba(21,21,22,.13); }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+html { scroll-behavior: smooth; scroll-padding-top: 176px; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-manrope), sans-serif; padding-bottom: 54px; }
-.site-header { height: 76px; background: rgba(247,246,242,.88); border-bottom: 1px solid var(--line); backdrop-filter: blur(16px); }
-.site-header .navbar { height: 100%; }
-.navbar-brand { color: var(--ink); display: flex; align-items: center; gap: .65rem; font-size: 1.2rem; font-weight: 800; letter-spacing: -.04em; }
-.brand-mark { width: 34px; height: 34px; display: grid; place-items: center; background: var(--ink); color: white; border-radius: 50%; font-size: .95rem; }
-.brand-dot { color: #779c00; }
-.nav-link { color: var(--ink); font-size: .9rem; font-weight: 600; }
-.nav-link:hover { color: #668500; }
-.hero-section { padding-top: 76px; overflow: hidden; }
-.min-vh-content { min-height: calc(100vh - 130px); padding-block: 4.5rem; }
+.site-header { height: 166px; background: #397b72; color: #fff; box-shadow: 0 4px 16px rgba(9,47,42,.14); }
+.header-topbar { height: 58px; display: flex; align-items: center; background: #23665f; border-top: 5px solid #414141; font-size: .78rem; font-weight: 700; }
+.header-topbar .container { height: 100%; }
+.topbar-group { display: flex; align-items: center; gap: 1.15rem; white-space: nowrap; }
+.topbar-group a { display: flex; align-items: center; gap: .5rem; color: rgba(255,255,255,.96); text-decoration: none; }
+.topbar-group a:hover { color: #d7ff45; }
+.social-links { gap: .85rem; }
+.social-links a { width: 20px; height: 20px; justify-content: center; border: 1.5px solid rgba(255,255,255,.9); border-radius: 3px; font-size: .68rem; font-weight: 900; }
+.topbar-right { margin-left: auto; gap: .9rem; }
+.address { display: flex; align-items: center; gap: .55rem; margin-right: .5rem; }
+.flag { font-size: 1.15rem; line-height: 1; }
+.site-header .navbar { height: 108px; padding-block: 0; }
+.site-header .navbar .container { height: 100%; }
+.navbar-brand { color: #fff; display: flex; align-items: center; gap: .9rem; letter-spacing: -.03em; }
+.navbar-brand:hover, .navbar-brand:focus { color: #fff; }
+.brand-mark { position: relative; width: 66px; height: 60px; display: grid; place-items: center; border: 3px solid #fff; color: #fff; border-radius: 52% 48% 48% 52%; font-family: Georgia, serif; font-size: 2rem; font-style: italic; line-height: 1; transform: rotate(-4deg); }
+.brand-mark::after { content: ""; position: absolute; width: 9px; height: 9px; right: -4px; top: 11px; border-radius: 50%; background: #ff3b34; }
+.brand-mark span { font-size: 1.2rem; margin-left: -5px; }
+.brand-copy { display: flex; flex-direction: column; }
+.brand-copy strong { font-size: 1.45rem; font-weight: 800; }
+.brand-copy small { margin-top: .2rem; font-size: .67rem; font-weight: 600; letter-spacing: .29em; }
+.navbar-nav { gap: 1.85rem; }
+.nav-link { color: #fff; padding: .65rem 0 !important; font-size: .78rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+.nav-link:hover, .nav-link:focus { color: #d7ff45; }
+.chevron { margin-left: .3rem; font-size: 1rem; }
+.menu-button { width: 48px; height: 48px; margin-left: .4rem; border: 0; border-radius: 50%; background: #176860; display: grid; place-content: center; gap: 5px; }
+.menu-button span { display: block; width: 21px; height: 3px; border-radius: 2px; background: #fff; }
+.hero-section { padding-top: 166px; overflow: hidden; }
+.min-vh-content { min-height: calc(100vh - 220px); padding-block: 4.5rem; }
 .eyebrow, .section-label { text-transform: uppercase; letter-spacing: .14em; font-size: .72rem; font-weight: 800; }
 .eyebrow { display: flex; align-items: center; gap: .75rem; }
 .eyebrow span { width: 28px; height: 2px; background: var(--ink); }
@@ -33,5 +53,7 @@ h1 span::after { content: ""; position: absolute; z-index: -1; left: -.02em; rig
 .service-number { font-size: .75rem; font-weight: 800; opacity: .5; }.service-card h3 { margin: 3rem 0 1rem; font-size: 1.3rem; }.service-card p { color: #626267; line-height: 1.7; margin: 0; }.card-arrow { position: absolute; right: 1.5rem; top: 1.5rem; font-size: 1.35rem; }
 .about-section { background: var(--paper); }.stat-box { min-height: 270px; border-radius: 50% 50% 1.5rem 1.5rem; background: var(--ink); color: white; padding: 3rem; display: flex; flex-direction: column; justify-content: flex-end; }.stat-box strong { color: var(--acid); font-size: 5rem; letter-spacing: -.07em; }.stat-box span { max-width: 250px; line-height: 1.6; }
 .site-footer { height: 54px; background: var(--ink); color: rgba(255,255,255,.68); font-size: .78rem; display: flex; align-items: center; z-index: 1040; }.site-footer a { color: white; text-decoration: none; font-weight: 700; }
-@media (max-width: 767.98px) { .site-header { height: 68px; }.hero-section { padding-top: 68px; }.min-vh-content { min-height: auto; padding-block: 5rem 4rem; }h1 { font-size: clamp(3rem, 14vw, 4.7rem); }.service-card { min-height: 235px; }.stat-box { min-height: 230px; }.site-footer span, .site-footer a { font-size: .7rem; } }
+@media (max-width: 1199.98px) { .navbar-nav { gap: 1.4rem; }.brand-copy strong { font-size: 1.25rem; } }
+@media (max-width: 767.98px) { html { scroll-padding-top: 132px; }.site-header { height: 126px; }.header-topbar { height: 42px; font-size: .68rem; }.topbar-group { gap: .75rem; }.site-header .navbar { height: 84px; }.brand-mark { width: 48px; height: 44px; font-size: 1.45rem; }.brand-mark span { font-size: .85rem; }.brand-copy strong { font-size: 1.02rem; }.brand-copy small { font-size: .5rem; letter-spacing: .2em; }.navbar-nav { gap: .6rem; }.nav-link { font-size: .67rem; }.menu-button { width: 42px; height: 42px; }.hero-section { padding-top: 126px; }.min-vh-content { min-height: auto; padding-block: 5rem 4rem; }h1 { font-size: clamp(3rem, 14vw, 4.7rem); }.service-card { min-height: 235px; }.stat-box { min-height: 230px; }.site-footer span, .site-footer a { font-size: .7rem; } }
+@media (max-width: 430px) { .brand-copy small { display: none; }.navbar-nav .nav-link { display: none; }.topbar-right a:last-child { display: none; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; }.service-card { transition: none; } }

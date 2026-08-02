@@ -8,16 +8,38 @@ export default function Home() {
   return (
     <div className="site-shell">
       <header className="fixed-top site-header">
+        <div className="header-topbar">
+          <div className="container d-flex align-items-center justify-content-between gap-3">
+            <div className="topbar-group">
+              <div className="social-links d-none d-lg-flex" aria-label="Media sosial">
+                <a href="#kontak" aria-label="LinkedIn">in</a>
+                <a href="#kontak" aria-label="Facebook">f</a>
+                <a href="#kontak" aria-label="Instagram">◎</a>
+              </div>
+              <a href="mailto:info@buq.studio"><span aria-hidden="true">✉</span> info@buq.studio</a>
+              <a className="d-none d-sm-flex" href="tel:+6281368622333"><span aria-hidden="true">●</span> 0813 686 22 333</a>
+            </div>
+            <div className="topbar-group topbar-right">
+              <span className="address d-none d-xl-flex"><span aria-hidden="true">●</span> Jl. Lentera No. 2, Manado, Sulawesi Utara, Indonesia</span>
+              <a href="#" aria-label="Bahasa Indonesia"><span className="flag">🇮🇩</span> ID</a>
+              <a href="#" aria-label="English"><span className="flag">🇬🇧</span> EN</a>
+            </div>
+          </div>
+        </div>
         <nav className="navbar navbar-expand" aria-label="Navigasi utama">
           <div className="container">
             <a className="navbar-brand" href="#beranda" aria-label="BUQ Studio - Beranda">
-              <span className="brand-mark">B</span>
-              <span>BUQ<span className="brand-dot">.</span></span>
+              <span className="brand-mark">B<span>Q</span></span>
+              <span className="brand-copy"><strong>BUQ Studio</strong><small>Think · Build · Grow</small></span>
             </a>
-            <div className="navbar-nav ms-auto align-items-center gap-1 gap-md-3">
-              <a className="nav-link d-none d-sm-block" href="#layanan">Layanan</a>
-              <a className="nav-link d-none d-sm-block" href="#tentang">Tentang</a>
-              <a className="btn btn-dark rounded-pill px-3 px-md-4" href="#kontak">Mulai proyek</a>
+            <div className="navbar-nav ms-auto align-items-center">
+              <a className="nav-link" href="#beranda">Beranda</a>
+              <a className="nav-link d-none d-lg-flex" href="#tentang">Tentang Kami</a>
+              <a className="nav-link d-none d-lg-flex" href="#layanan">Aktivitas</a>
+              <a className="nav-link d-none d-xl-flex" href="#layanan">Program</a>
+              <a className="nav-link d-none d-xl-flex" href="#tentang">Portofolio</a>
+              <a className="nav-link d-none d-xl-flex" href="#kontak">Unit Kegiatan <span className="chevron">⌄</span></a>
+              <button className="menu-button" type="button" aria-label="Buka menu"><span></span><span></span><span></span></button>
             </div>
           </div>
         </nav>
