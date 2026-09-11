@@ -1,0 +1,9 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/ybuqor/buq_node_app
+    - /bin/cp -R app $DEPLOYPATH/
+    - /bin/cp -R public $DEPLOYPATH/
+    - /bin/cp -R db $DEPLOYPATH/
+    - /bin/cp package.json $DEPLOYPATH/
+    - /bin/touch $DEPLOYPATH/tmp/restart.txt

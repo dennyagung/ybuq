@@ -1,108 +1,98 @@
-const services = [
-  { number: "01", title: "Strategi Digital", text: "Arah yang jelas, prioritas yang tepat, dan rencana pertumbuhan yang terukur." },
-  { number: "02", title: "Web Development", text: "Website cepat, responsif, dan mudah digunakan di setiap ukuran layar." },
-  { number: "03", title: "Brand Experience", text: "Identitas visual yang konsisten untuk membuat bisnis Anda lebih mudah diingat." },
-];
+"use client";
+
+import HeroCarousel from "./HeroCarousel";
+import DevelopmentGallery from "./DevelopmentGallery";
+import SiteFooter from "./SiteFooter";
+import SiteHeader from "./SiteHeader";
+import { useLanguage } from "./LanguageContext";
+import { translations } from "./translations";
 
 export default function Home() {
+  const { lang } = useLanguage();
+  const heroT = translations[lang].hero;
+  const homeT = translations[lang].home;
+  const navT = translations[lang].nav;
+  const activitiesData = translations[lang].homeActivities;
+  const videoLabel = { id: "Tonton Video", en: "Watch Video", ar: "شاهد الفيديو" }[lang];
+
+  const activityAssets = [
+    { image: "/maulid-nabi-masjid-al-huda-2026.jpeg", href: "/aktivitas/maulid-nabi-muhammad-masjid-al-huda" },
+    { image: "/majelis-taklim-kuliah-subuh-subulussalam-2026.png", href: "/aktivitas/majelis-taklim-kuliah-subuh-subulussalam" },
+    { image: "/aktivitas-adab-imam-khatib.png", href: "/aktivitas/adab-imam-dan-khatib" },
+  ];
+
+  const homeActivities = activitiesData.map((activity, index) => ({
+    ...activity,
+    image: activityAssets[index].image,
+    href: activityAssets[index].href,
+  }));
+
   return (
     <div className="site-shell">
-      <header className="fixed-top site-header">
-        <div className="header-topbar">
-          <div className="container d-flex align-items-center justify-content-between gap-3">
-            <div className="topbar-group">
-              <div className="social-links d-none d-lg-flex" aria-label="Media sosial">
-                <a href="#kontak" aria-label="LinkedIn">in</a>
-                <a href="#kontak" aria-label="Facebook">f</a>
-                <a href="#kontak" aria-label="Instagram">◎</a>
-              </div>
-              <a href="mailto:info@buq.studio"><span aria-hidden="true">✉</span> info@buq.studio</a>
-              <a className="d-none d-sm-flex" href="tel:+6281368622333"><span aria-hidden="true">●</span> 0813 686 22 333</a>
-            </div>
-            <div className="topbar-group topbar-right">
-              <span className="address d-none d-xl-flex"><span aria-hidden="true">●</span> Jl. Lentera No. 2, Manado, Sulawesi Utara, Indonesia</span>
-              <a href="#" aria-label="Bahasa Indonesia"><span className="flag">🇮🇩</span> ID</a>
-              <a href="#" aria-label="English"><span className="flag">🇬🇧</span> EN</a>
-            </div>
-          </div>
-        </div>
-        <nav className="navbar navbar-expand" aria-label="Navigasi utama">
-          <div className="container">
-            <a className="navbar-brand" href="#beranda" aria-label="BUQ Studio - Beranda">
-              <span className="brand-mark">B<span>Q</span></span>
-              <span className="brand-copy"><strong>BUQ Studio</strong><small>Think · Build · Grow</small></span>
-            </a>
-            <div className="navbar-nav ms-auto align-items-center">
-              <a className="nav-link" href="#beranda">Beranda</a>
-              <a className="nav-link d-none d-lg-flex" href="#tentang">Tentang Kami</a>
-              <a className="nav-link d-none d-lg-flex" href="#layanan">Aktivitas</a>
-              <a className="nav-link d-none d-xl-flex" href="#layanan">Program</a>
-              <a className="nav-link d-none d-xl-flex" href="#tentang">Portofolio</a>
-              <a className="nav-link d-none d-xl-flex" href="#kontak">Unit Kegiatan <span className="chevron">⌄</span></a>
-              <button className="menu-button" type="button" aria-label="Buka menu"><span></span><span></span><span></span></button>
-            </div>
-          </div>
-        </nav>
-      </header>
-
+      <SiteHeader />
       <main>
-        <section id="beranda" className="hero-section">
-          <div className="container position-relative">
-            <div className="row align-items-center min-vh-content g-5">
-              <div className="col-lg-7">
-                <div className="eyebrow mb-4"><span /> Studio digital independen</div>
-                <h1 className="display-1 fw-semibold mb-4">Ide bagus layak tampil <span>luar biasa.</span></h1>
-                <p className="lead text-secondary mb-5">Kami membantu brand tumbuh melalui strategi, desain, dan teknologi yang terasa sederhana—tetapi bekerja lebih keras.</p>
-                <div className="d-flex flex-wrap gap-3">
-                  <a className="btn btn-dark btn-lg rounded-pill px-4" href="#layanan">Lihat layanan <span aria-hidden="true">→</span></a>
-                  <a className="btn btn-link btn-lg text-dark text-decoration-none" href="#tentang">Kenal lebih dekat</a>
-                </div>
+        <HeroCarousel />
+        <section className="welcome-panel-wrap" aria-labelledby="welcome-title">
+          <div className="welcome-panel">
+            <h2 id="welcome-title">{heroT.welcomeTitle}</h2>
+            <p>{heroT.welcomeDesc}</p>
+          </div>
+        </section>
+        <section className="home-introduction" aria-labelledby="introduction-title">
+          <div className="container">
+            <div className="introduction-heading">
+              <div><span>{homeT.introKicker}</span><h2 id="introduction-title">{homeT.introTitle}</h2></div>
+            </div>
+            <div className="row g-5 align-items-start">
+              <div className="col-lg-8 introduction-copy">
+                <p>{homeT.introP1}</p>
+                <p>{homeT.introP2}</p>
+                <p>{homeT.introP3}</p>
+                <p className="introduction-prayer">{homeT.introPrayer}</p>
+                <a className="introduction-video-button" href="/video-ybuq-20260828.mp4" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-play-circle-fill" aria-hidden="true" /> {videoLabel}
+                </a>
               </div>
-              <div className="col-lg-5 d-none d-lg-block">
-                <div className="hero-art" aria-hidden="true">
-                  <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-                  <div className="art-card"><span>Think.</span><strong>Build.</strong><em>Grow.</em></div>
-                  <div className="accent-block" />
+              <aside className="col-lg-4">
+                <div className="introduction-signature">
+                  <div className="signature-mark"><img src="/logo-ybuq-2026.png" alt="" /><span className="signature-quote-mark" aria-hidden="true">&quot;</span></div>
+                  <blockquote>{homeT.quoteText}</blockquote>
+                  <div className="signature-divider" />
+                  <strong>{homeT.caretakerName}</strong>
+                  <span>{homeT.caretakerRole}</span>
                 </div>
-              </div>
+              </aside>
             </div>
           </div>
         </section>
-
-        <section id="layanan" className="services-section py-5">
-          <div className="container py-4">
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-5">
-              <div><div className="section-label">Apa yang kami kerjakan</div><h2 className="display-5 fw-semibold mb-0">Dari gagasan menjadi dampak.</h2></div>
-              <p className="text-secondary mb-0 services-intro">Solusi digital yang fokus pada tujuan bisnis, bukan sekadar terlihat bagus.</p>
+        <section className="development-showcase" aria-labelledby="development-title">
+          <div className="container">
+            <div className="development-intro">
+              <div className="development-title-block">
+                <span>{homeT.devKicker}</span>
+                <h2 id="development-title">{homeT.devTitle.split(" ")[0]}<br />{homeT.devTitle.split(" ")[1] ?? ""}</h2>
+                <a href="/pesantren"><i className="bi bi-arrow-up-right" aria-hidden="true" /> {homeT.devBtn}</a>
+              </div>
+              <div className="development-copy">
+                <h3>{homeT.devSubHeading}</h3>
+                <p>{homeT.devDesc}</p>
+              </div>
             </div>
-            <div className="row g-3">
-              {services.map((service) => (
-                <div className="col-md-4" key={service.number}>
-                  <article className="service-card h-100">
-                    <span className="service-number">{service.number}</span><h3>{service.title}</h3><p>{service.text}</p><span className="card-arrow" aria-hidden="true">↗</span>
-                  </article>
-                </div>
-              ))}
-            </div>
+            <DevelopmentGallery />
           </div>
         </section>
-
-        <section id="tentang" className="about-section py-5">
-          <div className="container py-5">
-            <div className="row g-5 align-items-center">
-              <div className="col-lg-5"><div className="stat-box"><strong>8+</strong><span>Tahun mengubah ide menjadi produk digital.</span></div></div>
-              <div className="col-lg-7"><div className="section-label">Tentang BUQ</div><h2 className="display-5 fw-semibold">Tim kecil dengan perhatian besar pada detail.</h2><p className="lead text-secondary mt-4">Kami percaya proses terbaik lahir dari kolaborasi yang jujur, komunikasi yang ringkas, dan keberanian untuk memangkas hal yang tidak perlu.</p></div>
+        <section className="home-activities" aria-labelledby="home-activities-title">
+          <div className="container">
+            <div className="home-activities-heading">
+              <div><h2 id="home-activities-title">{homeT.activitiesTitle}</h2><p>{homeT.activitiesSub}</p></div>
+              <a href="/aktivitas"><i className="bi bi-arrow-up-right" aria-hidden="true" /> {homeT.activitiesAllBtn}</a>
             </div>
+            <div className="row g-4">{homeActivities.map((activity) => <div className="col-md-6 col-xl-4" key={activity.title}><article className="home-activity-card"><a className="home-activity-image" href={activity.href}><img src={activity.image} alt={activity.title} /><span>{activity.category}</span></a><div className="home-activity-body"><h3>{activity.title}</h3><p>{activity.text}</p><a href={activity.href}>{homeT.activitiesReadMore} <i className="bi bi-arrow-right" aria-hidden="true" /></a></div></article></div>)}</div>
           </div>
         </section>
       </main>
-
-      <footer id="kontak" className="fixed-bottom site-footer">
-        <div className="container d-flex justify-content-between align-items-center">
-          <span>© 2026 BUQ Studio</span>
-          <a href="mailto:hello@buq.studio">hello@buq.studio <span aria-hidden="true">↗</span></a>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
+
