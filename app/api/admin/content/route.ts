@@ -8,7 +8,7 @@ import {
   HeroConfig,
   ContactMessage,
   SiteSettings,
-} from "../../lib/cms-store";
+} from "../../../lib/cms-store";
 
 // Global memory state for runtime persistence
 let articles: Article[] = [...initialArticles];
