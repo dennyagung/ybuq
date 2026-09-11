@@ -9,6 +9,16 @@ Options -Indexes
 # Fallback & static file handling
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Serve extensionless static admin routes without handing them to Passenger.
+    RewriteRule ^admin/login/?$ admin/login/index.html [L]
+    RewriteRule ^admin/?$ admin/index.html [L]
+    RewriteRule ^admin/(aktivitas|hero|pesan|pengaturan)/?$ admin/$1/index.html [L]
+
+    # The public site is static, while the admin API is handled by PHP.
+    RewriteRule ^api/admin/auth/?$ api/admin/auth/index.php [L,QSA]
+    RewriteRule ^api/admin/content/?$ api/admin/content/index.php [L,QSA]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}/index.html -f
