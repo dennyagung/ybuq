@@ -1,0 +1,11 @@
+# cPanel Node.js Passenger & URL Rewrite Rules for YBUQ
+DirectoryIndex disabled
+RewriteEngine On
+
+# Allow direct access to physical files (images, css, js, favicon)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route all application URLs (including /admin, /admin/login, /aktivitas) to Node.js App
+RewriteRule ^(.*)$ index.js/$1 [PT,L]

@@ -2,8 +2,12 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ybuqor/buq_node_app
+    - export PUBLICPATH=/home/ybuqor/public_html
     - /bin/cp -R app $DEPLOYPATH/
     - /bin/cp -R public $DEPLOYPATH/
     - /bin/cp -R db $DEPLOYPATH/
     - /bin/cp package.json $DEPLOYPATH/
+    - /bin/cp translations.ts $DEPLOYPATH/
+    - /bin/cp .htaccess $DEPLOYPATH/ || true
+    - /bin/cp .htaccess $PUBLICPATH/ || true
     - /bin/touch $DEPLOYPATH/tmp/restart.txt
