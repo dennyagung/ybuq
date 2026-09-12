@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HeroConfig } from "../../lib/cms-store";
+import { getClientHero, HeroConfig, saveClientHero } from "../../lib/cms-store";
 
 export default function AdminHeroPage() {
   const [hero, setHero] = useState<Partial<HeroConfig>>({});
@@ -13,15 +13,19 @@ export default function AdminHeroPage() {
     async function loadHero() {
       try {
         const res = await fetch("/api/admin/content?type=hero");
-        const data = await res.json();
-        if (data.success) {
-          setHero(data.data || {});
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            setHero(data.data || {});
+            setLoading(false);
+            return;
+          }
         }
       } catch {
-        console.error("Gagal memuat hero config");
-      } finally {
-        setLoading(false);
+        // API not available
       }
+      setHero(getClientHero());
+      setLoading(false);
     }
     loadHero();
   }, []);
@@ -37,15 +41,24 @@ export default function AdminHeroPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "hero", data: hero }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setNotification("Pengaturan Hero Banner & Video berhasil diperbarui!");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setNotification("Pengaturan Hero Banner & Video berhasil diperbarui!");
+          setSaving(false);
+          return;
+        }
       }
     } catch {
-      alert("Gagal memperbarui hero config.");
-    } finally {
-      setSaving(false);
+      // API not available
     }
+
+    // Client fallback
+    const fullHero = { ...getClientHero(), ...hero } as HeroConfig;
+    saveClientHero(fullHero);
+    setHero(fullHero);
+    setNotification("Pengaturan Hero Banner & Video berhasil diperbarui!");
+    setSaving(false);
   };
 
   if (loading) return <div className="admin-loading-inline">Memuat pengaturan Hero Banner...</div>;

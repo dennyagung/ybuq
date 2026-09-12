@@ -113,3 +113,69 @@ export const initialSettings: SiteSettings = {
   instagramUrl: "https://www.instagram.com/bina_ummah_quraniyah/",
   youtubeUrl: "https://www.youtube.com/@BinaUmmahQuraniyah",
 };
+
+// Client LocalStorage Helpers for Static Export Mode
+export function getClientArticles(): Article[] {
+  if (typeof window === "undefined") return initialArticles;
+  const stored = localStorage.getItem("ybuq_cms_articles");
+  if (!stored) return initialArticles;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return initialArticles;
+  }
+}
+
+export function saveClientArticles(articles: Article[]): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("ybuq_cms_articles", JSON.stringify(articles));
+}
+
+export function getClientHero(): HeroConfig {
+  if (typeof window === "undefined") return initialHeroConfig;
+  const stored = localStorage.getItem("ybuq_cms_hero");
+  if (!stored) return initialHeroConfig;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return initialHeroConfig;
+  }
+}
+
+export function saveClientHero(hero: HeroConfig): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("ybuq_cms_hero", JSON.stringify(hero));
+}
+
+export function getClientMessages(): ContactMessage[] {
+  if (typeof window === "undefined") return initialMessages;
+  const stored = localStorage.getItem("ybuq_cms_messages");
+  if (!stored) return initialMessages;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return initialMessages;
+  }
+}
+
+export function saveClientMessages(messages: ContactMessage[]): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("ybuq_cms_messages", JSON.stringify(messages));
+}
+
+export function getClientSettings(): SiteSettings {
+  if (typeof window === "undefined") return initialSettings;
+  const stored = localStorage.getItem("ybuq_cms_settings");
+  if (!stored) return initialSettings;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return initialSettings;
+  }
+}
+
+export function saveClientSettings(settings: SiteSettings): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("ybuq_cms_settings", JSON.stringify(settings));
+}
+

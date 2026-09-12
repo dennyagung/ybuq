@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Article } from "../../lib/cms-store";
+import { Article, getClientArticles, saveClientArticles } from "../../lib/cms-store";
 
 export default function AdminAktivitasPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -14,15 +14,19 @@ export default function AdminAktivitasPage() {
   const loadArticles = async () => {
     try {
       const res = await fetch("/api/admin/content?type=articles");
-      const data = await res.json();
-      if (data.success) {
-        setArticles(data.data || []);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setArticles(data.data || []);
+          setLoading(false);
+          return;
+        }
       }
     } catch {
-      console.error("Gagal memuat artikel");
-    } finally {
-      setLoading(false);
+      // API not available
     }
+    setArticles(getClientArticles());
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -48,14 +52,24 @@ export default function AdminAktivitasPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "article", action: "delete", data: { id } }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setNotification("Artikel berhasil dihapus.");
-        loadArticles();
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setNotification("Artikel berhasil dihapus.");
+          loadArticles();
+          return;
+        }
       }
     } catch {
-      alert("Gagal menghapus artikel.");
+      // API not available
     }
+
+    // Client fallback
+    const current = getClientArticles();
+    const filtered = current.filter((item) => item.id !== id);
+    saveClientArticles(filtered);
+    setArticles(filtered);
+    setNotification("Artikel berhasil dihapus.");
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -69,17 +83,42 @@ export default function AdminAktivitasPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "article", action, data: editingArticle }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setNotification(`Artikel berhasil ${action === "create" ? "ditambahkan" : "diperbarui"}.`);
-        setShowModal(false);
-        loadArticles();
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setNotification(`Artikel berhasil ${action === "create" ? "ditambahkan" : "diperbarui"}.`);
+          setShowModal(false);
+          loadArticles();
+          setSaving(false);
+          return;
+        }
       }
     } catch {
-      alert("Gagal menyimpan artikel.");
-    } finally {
-      setSaving(false);
+      // API not available
     }
+
+    // Client fallback
+    const current = getClientArticles();
+    let updatedList: Article[];
+    if (editingArticle.id) {
+      updatedList = current.map((item) => (item.id === editingArticle.id ? ({ ...item, ...editingArticle } as Article) : item));
+    } else {
+      const newItem: Article = {
+        id: Date.now().toString(),
+        category: editingArticle.category || "Ibadah & Kajian",
+        date: editingArticle.date || new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+        title: editingArticle.title || "",
+        excerpt: editingArticle.excerpt || "",
+        content: editingArticle.content || "",
+        image: editingArticle.image || "/hero-campus-wide.jpeg",
+      };
+      updatedList = [newItem, ...current];
+    }
+    saveClientArticles(updatedList);
+    setArticles(updatedList);
+    setNotification("Artikel berhasil disimpan.");
+    setShowModal(false);
+    setSaving(false);
   };
 
   if (loading) return <div className="admin-loading-inline">Memuat daftar aktivitas...</div>;

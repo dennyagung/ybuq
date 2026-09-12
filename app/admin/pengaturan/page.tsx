@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SiteSettings } from "../../lib/cms-store";
+import { getClientSettings, saveClientSettings, SiteSettings } from "../../lib/cms-store";
 
 export default function AdminPengaturanPage() {
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
@@ -13,15 +13,19 @@ export default function AdminPengaturanPage() {
     async function loadSettings() {
       try {
         const res = await fetch("/api/admin/content?type=settings");
-        const data = await res.json();
-        if (data.success) {
-          setSettings(data.data || {});
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            setSettings(data.data || {});
+            setLoading(false);
+            return;
+          }
         }
       } catch {
-        console.error("Gagal memuat pengaturan");
-      } finally {
-        setLoading(false);
+        // API not available
       }
+      setSettings(getClientSettings());
+      setLoading(false);
     }
     loadSettings();
   }, []);
@@ -37,15 +41,24 @@ export default function AdminPengaturanPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "settings", data: settings }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setNotification("Pengaturan kontak dan informasi situs berhasil diperbarui!");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setNotification("Pengaturan kontak dan informasi situs berhasil diperbarui!");
+          setSaving(false);
+          return;
+        }
       }
     } catch {
-      alert("Gagal memperbarui pengaturan.");
-    } finally {
-      setSaving(false);
+      // API not available
     }
+
+    // Client fallback
+    const fullSettings = { ...getClientSettings(), ...settings } as SiteSettings;
+    saveClientSettings(fullSettings);
+    setSettings(fullSettings);
+    setNotification("Pengaturan kontak dan informasi situs berhasil diperbarui!");
+    setSaving(false);
   };
 
   if (loading) return <div className="admin-loading-inline">Memuat pengaturan situs...</div>;

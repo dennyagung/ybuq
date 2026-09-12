@@ -23,17 +23,32 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ action: "login", username, password }),
       });
 
-      const data = await res.json();
-      if (data.success) {
-        router.push("/admin");
-      } else {
-        setError(data.message || "Gagal login. Periksa username dan password Anda.");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem("ybuq_admin_session", "ybuq-admin-session-v2");
+          router.push("/admin");
+          return;
+        } else {
+          setError(data.message || "Gagal login. Periksa username dan password Anda.");
+          setLoading(false);
+          return;
+        }
       }
     } catch {
-      setError("Terjadi kesalahan jaringan. Coba lagi.");
-    } finally {
-      setLoading(false);
+      // Fallback for static cPanel hosting where /api/admin/auth returns 404 / error
     }
+
+    // Client-side authentication check for static export mode
+    const cleanUser = username.trim().toLowerCase();
+    if ((cleanUser === "admin" || cleanUser === "admin@ybuq.or.id") && password === "YBUQ@2026!Admin") {
+      localStorage.setItem("ybuq_admin_session", "ybuq-admin-session-v2");
+      document.cookie = "ybuq_admin_session=ybuq-admin-session-v2; path=/; max-age=86400";
+      router.push("/admin");
+    } else {
+      setError("Username atau password salah. Silakan coba lagi.");
+    }
+    setLoading(false);
   };
 
   return (

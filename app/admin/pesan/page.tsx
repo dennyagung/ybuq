@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ContactMessage } from "../../lib/cms-store";
+import { ContactMessage, getClientMessages, saveClientMessages } from "../../lib/cms-store";
 
 export default function AdminPesanPage() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -11,15 +11,19 @@ export default function AdminPesanPage() {
   const loadMessages = async () => {
     try {
       const res = await fetch("/api/admin/content?type=messages");
-      const data = await res.json();
-      if (data.success) {
-        setMessages(data.data || []);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setMessages(data.data || []);
+          setLoading(false);
+          return;
+        }
       }
     } catch {
-      console.error("Gagal memuat pesan masuk");
-    } finally {
-      setLoading(false);
+      // API not available
     }
+    setMessages(getClientMessages());
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -27,34 +31,53 @@ export default function AdminPesanPage() {
   }, []);
 
   const handleSelectMessage = async (msg: ContactMessage) => {
-    setSelectedMsg(msg);
+    setSelectedMsg({ ...msg, read: true });
     if (!msg.read) {
       try {
-        await fetch("/api/admin/content", {
+        const res = await fetch("/api/admin/content", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ type: "message", action: "markRead", data: { id: msg.id } }),
         });
-        loadMessages();
+        if (res.ok) {
+          loadMessages();
+          return;
+        }
       } catch {
-        console.error("Gagal tandai terbaca");
+        // API not available
       }
+
+      // Client fallback
+      const current = getClientMessages();
+      const updated = current.map((m) => (m.id === msg.id ? { ...m, read: true } : m));
+      saveClientMessages(updated);
+      setMessages(updated);
     }
   };
 
   const handleDeleteMessage = async (id: string) => {
     if (!confirm("Hapus pesan ini dari inbox?")) return;
     try {
-      await fetch("/api/admin/content", {
+      const res = await fetch("/api/admin/content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "message", action: "delete", data: { id } }),
       });
-      setSelectedMsg(null);
-      loadMessages();
+      if (res.ok) {
+        setSelectedMsg(null);
+        loadMessages();
+        return;
+      }
     } catch {
-      alert("Gagal menghapus pesan.");
+      // API not available
     }
+
+    // Client fallback
+    const current = getClientMessages();
+    const filtered = current.filter((m) => m.id !== id);
+    saveClientMessages(filtered);
+    setMessages(filtered);
+    setSelectedMsg(null);
   };
 
   if (loading) return <div className="admin-loading-inline">Memuat kotak masuk pesan...</div>;

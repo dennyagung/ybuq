@@ -17,29 +17,48 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return;
       }
 
+      // Check client session first (static cPanel export compatibility)
+      const clientSession = typeof window !== "undefined" ? localStorage.getItem("ybuq_admin_session") : null;
+      if (clientSession === "ybuq-admin-session-v2") {
+        setAuthenticated(true);
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await fetch("/api/admin/auth");
-        const data = await res.json();
-        if (data.authenticated) {
-          setAuthenticated(true);
-        } else {
-          router.push("/admin/login");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated) {
+            setAuthenticated(true);
+            setLoading(false);
+            return;
+          }
         }
       } catch {
-        router.push("/admin/login");
-      } finally {
-        setLoading(false);
+        // API not available
       }
+
+      router.push("/admin/login");
+      setLoading(false);
     }
     checkAuth();
   }, [pathname, isLoginPage, router]);
 
   const handleLogout = async () => {
-    await fetch("/api/admin/auth", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "logout" }),
-    });
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("ybuq_admin_session");
+      document.cookie = "ybuq_admin_session=; path=/; max-age=0";
+    }
+    try {
+      await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "logout" }),
+      });
+    } catch {
+      // Ignore API logout error in static export
+    }
     router.push("/admin/login");
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Article, ContactMessage } from "../lib/cms-store";
+import { Article, ContactMessage, getClientArticles, getClientMessages } from "../lib/cms-store";
 
 export default function AdminDashboardPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -12,16 +12,21 @@ export default function AdminDashboardPage() {
     async function fetchData() {
       try {
         const res = await fetch("/api/admin/content");
-        const data = await res.json();
-        if (data.success) {
-          setArticles(data.data.articles || []);
-          setMessages(data.data.messages || []);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            setArticles(data.data.articles || []);
+            setMessages(data.data.messages || []);
+            setLoading(false);
+            return;
+          }
         }
       } catch {
-        console.error("Gagal memuat data dashboard");
-      } finally {
-        setLoading(false);
+        // API not available
       }
+      setArticles(getClientArticles());
+      setMessages(getClientMessages());
+      setLoading(false);
     }
     fetchData();
   }, []);
