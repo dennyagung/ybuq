@@ -79,17 +79,58 @@ export default function AdminHeroPage() {
         <p className="section-desc">Video ini diputar otomatis tanpa batasan height ketika pengunjung memilih Bahasa Inggris (EN).</p>
         
         <div className="form-group">
-          <label>File Video Path (di folder public/)</label>
+          <label>File Video Hero (Upload File Video Baru atau Masukkan Path)</label>
+
+          <div className="video-upload-box" style={{ border: "2px dashed #cbd5e1", padding: "16px", borderRadius: "10px", backgroundColor: "#f8fafc", marginBottom: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+              <input
+                type="file"
+                accept="video/*"
+                id="hero-video-file-input"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      if (event.target?.result) {
+                        setHero({ ...hero, englishVideo: event.target.result as string });
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+              <label htmlFor="hero-video-file-input" className="admin-btn-primary" style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                <i className="bi bi-cloud-upload-fill" /> Pilih File Video dari Komputer
+              </label>
+              <small className="help-text">Format: MP4, WebM (Maksimal disarankan &lt; 50MB)</small>
+            </div>
+
+            {hero.englishVideo && (
+              <div style={{ marginTop: "12px" }}>
+                <small style={{ fontWeight: 600, display: "block", marginBottom: "4px" }}>Preview Video Hero Saat Ini / Terpilih:</small>
+                <video
+                  src={hero.englishVideo}
+                  controls
+                  muted
+                  style={{ width: "100%", maxHeight: "240px", borderRadius: "8px", backgroundColor: "#000" }}
+                />
+              </div>
+            )}
+          </div>
+
+          <label style={{ fontSize: "0.85rem", color: "#64748b" }}>Path / URL Video Manual</label>
           <div className="input-group">
             <input
               type="text"
               value={hero.englishVideo || ""}
               onChange={(e) => setHero({ ...hero, englishVideo: e.target.value })}
-              placeholder="/hero-video.mp4"
+              placeholder="/hero-video.mp4 atau data:video/mp4;base64,..."
               required
             />
           </div>
-          <small className="help-text">File video utama tersimpan di `public/hero-video.mp4`</small>
+          <small className="help-text">File video utama tersimpan di `public/hero-video.mp4` atau URL data upload.</small>
         </div>
 
         <hr className="divider" />

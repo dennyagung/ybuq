@@ -214,13 +214,49 @@ export default function AdminAktivitasPage() {
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label>Path Foto Cover (di folder public/)</label>
+                <div className="form-group" style={{ gridColumn: "span 2" }}>
+                  <label>Foto Cover Artikel (Upload Foto Baru atau Masukkan Path)</label>
+                  <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "8px" }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="article-image-file-input"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            if (event.target?.result) {
+                              setEditingArticle({ ...editingArticle, image: event.target.result as string });
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                    <label htmlFor="article-image-file-input" className="admin-btn-primary" style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.85rem", padding: "8px 14px" }}>
+                      <i className="bi bi-image-fill" /> Pilih Foto dari Komputer
+                    </label>
+                    <small className="help-text">Format: JPG, PNG, WEBP</small>
+                  </div>
+
+                  {editingArticle.image && (
+                    <div style={{ marginBottom: "10px", display: "flex", alignItems: "center", gap: "12px" }}>
+                      <img
+                        src={editingArticle.image}
+                        alt="Preview Cover"
+                        style={{ height: "70px", width: "110px", objectFit: "cover", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+                      />
+                      <small style={{ color: "#475569" }}>Preview foto cover terpilih</small>
+                    </div>
+                  )}
+
                   <input
                     type="text"
                     value={editingArticle.image || ""}
                     onChange={(e) => setEditingArticle({ ...editingArticle, image: e.target.value })}
-                    placeholder="/aktivitas-adab-imam-khatib.png"
+                    placeholder="/aktivitas-adab-imam-khatib.png atau data:image/png;base64,..."
                   />
                 </div>
               </div>
